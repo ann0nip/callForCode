@@ -1,0 +1,12 @@
+.content {
+  background-color: #55ddcb;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.card {
+  border-radius: 0 20px 0 0;
+  min-height: 400px;
+  width: 90%;
+}
