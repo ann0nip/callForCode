@@ -27,8 +27,7 @@ async function main(params){
         'Content-Type': 'application/json',
         'Authorization': "Basic "+ base64.encode(username + ":" + password) 
       },
-      //body: JSON.stringify({meetingId,integrants:[...email],date:now,active:true,expiresAt:tomorrow})
-      body: JSON.stringify({meetingId:meetingId})
+      body: JSON.stringify({meetingId,integrants:[...email],date:now,active:true,expiresAt:tomorrow})
     });
     const b = await a.json();
     return { meetingId, createdBy: email, createdAt:now};
