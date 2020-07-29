@@ -1,15 +1,23 @@
-/joinMeeting endPoint
+# Join Meeting
 
-Request
-Content-Type : application/json
-Authorization: Bearer <token>
-HTTP Method: POST
-Data:
-{ "meetingId": <meeting_id>}
+This end point join a person to a meeting.
 
-Response
-application/json
+## Request
+
+| End Point | **/joinMeeting**                  |
+| --------- | --------------------------------- |
+| Method    | POST                              |
+| Headers:  | Content-Type:application/json     |
+|           | Authorization:Bearer _<token_id>_ |
+| Body:     | `{"meetingId":"<meeting_id>"}`    |
+
+## Response
+
+Example:
+
+```json
 {
-  "joined": boolean,
-  "meetingId": <meeting_id>
+  "joined": "true|false",
+  "meetingId": "<meeting_id>"
 }
+```

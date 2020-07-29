@@ -14,7 +14,7 @@ async function main(params){
     limit = 5;
   }
   try{  
-    const selector = { selector : { "integrants": { "$in": [email ]},"date": {"$ne": null }  ,"active":true},"fields": [
+    const selector = { selector : { "integrants": { "$in": [email ]},"date": {"$ne": null } },"fields": [
       "level",
       "date",
       "meetingId"
