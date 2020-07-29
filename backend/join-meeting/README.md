@@ -1,6 +1,6 @@
 # Join Meeting
 
-This end point join a person to a meeting.
+This end point joins a person to a meeting.
 
 ## Request
 

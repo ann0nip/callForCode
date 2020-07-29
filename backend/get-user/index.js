@@ -9,17 +9,11 @@ async function main(params){
   const token = params.__ow_headers.authorization;
   var auth = jwt_decode(token);
   let { email } = auth;
-  let { limit } = params;
-  if(!limit){
-    limit = 5;
+  if(params.email){
+    email = params.email;
   }
   try{  
-    const selector = { selector : { "integrants": { "$in": [email ]},"date": {"$ne": null } },"fields": [
-      "level",
-      "date",
-      "meetingId",
-      "integrants"
-    ]};
+    const selector = { selector :  { "email" : email } };
    const promise = await fetch(`${publicAPI}/_find`,
     {
       method:'POST',
@@ -30,21 +24,12 @@ async function main(params){
       body: JSON.stringify(selector)
     });
     const resolve = await promise.json();
-    const { docs }  = resolve;
-    if(!docs ){
-      return {error: { statusCode: 404 } };
-    }
-    if(docs){
-      const meetings = docs.map( doc => {
-        const updDoc = {...doc};
-        updDoc.date = new Date(updDoc.date);
-        updDoc.totalMembers = updDoc.integrants.length;
-        const { meetingId,level,date,totalMembers} = updDoc
-        return { meetingId, level, date, totalMembers };
-      }).sort(function(a, b) {
-        return b.date - a.date;
-      }).filter( (d,i) => i < limit);
-      return { meetings };
+    if(resolve){
+      const user = resolve.docs[0];
+      delete user._id;
+      delete user._rev;
+
+      return { user };
     }
     return {error: { statusCode: 404 } };
   }catch(err){
