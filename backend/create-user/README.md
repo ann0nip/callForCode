@@ -14,16 +14,14 @@ Body:
 
 ```json
 {
-  "user": {
-    "city": "Irapuato",
-    "country": "Mexico",
-    "covid19": false,
-    "email": "testuser@gmail.com",
-    "health": "GOOD",
-    "state": "Guanajuato",
-    "symptoms": [],
-    "testedPositive": []
-  }
+  "city": "Irapuato",
+  "country": "Mexico",
+  "covid19": false,
+  "email": "testuser@gmail.com",
+  "health": "GOOD",
+  "state": "Guanajuato",
+  "symptoms": [],
+  "testedPositive": []
 }
 ```
 
