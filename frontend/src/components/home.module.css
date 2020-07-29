@@ -1,0 +1,46 @@
+.content {
+  background-color: #55ddcb;
+  display: flex;
+  flex-direction: column;
+}
+
+.rowHeader {
+  background-color: #fff;
+  border-radius: 0 0 20px 20px;
+  flex: 1;
+}
+
+.rowHeader_username {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.rowHeader_btns {
+  display: flex;
+  justify-content: space-around;
+}
+
+.rowHistory {
+  flex: 1;
+  flex-direction: column;
+}
+
+.rowHistory_title {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.rowHistory_list {
+  display: flex;
+  flex: 2;
+  justify-content: center;
+}
+
+.rowHistory_alertBtn {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}

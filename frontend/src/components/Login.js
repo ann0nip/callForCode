@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "antd/dist/antd.css";
 import AppID from "ibmcloud-appid-js";
 import { Layout, Card, Button, Typography } from "antd";
 import { openNotification } from "./commons/Alert";
+import { checkAuth, setAuth } from "./commons/Auth";
 import styles from "./login.module.css";
 import config from "../config.json";
 import girl from "../images/girl.png";
@@ -17,7 +18,7 @@ const cardBodyStyles = {
   height: "100%",
   justifyContent: "space-around",
 };
-export default function Login() {
+export default function Login(props) {
   const appID = React.useMemo(() => {
     return new AppID();
   }, []);
@@ -30,11 +31,18 @@ export default function Login() {
     }
   })();
 
+  useEffect(() => {
+    if (checkAuth()) {
+      props.history.push("/home");
+    }
+  }, []);
+
   const loginAction = async () => {
     try {
       const tokens = await appID.signin();
-      // TODO: Set the username in a react context
-      localStorage.setItem("tokenId", tokens.idToken);
+      // TODO: Set the username in a localstorage
+      setAuth(tokens.idToken);
+      props.history.push("/home");
     } catch (e) {
       openNotification("Error", e.message);
     }
