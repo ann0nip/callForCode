@@ -8,8 +8,12 @@ const publicAPI = process.env["PUBLIC_API"];
 async function main(params){
   const token = params.__ow_headers.authorization;
   var auth = jwt_decode(token);
-  let {email} = auth;
-  
+  let { email } = auth;
+  let { level } = params;
+  const levels = ["HIGH","MEDIUM","LOW"];
+  if(!level || ! levels.includes(level)){
+    level = "MEDIUM";
+  }
   try{
     const now = new Date().toISOString();
     let tomorrow = new Date();
@@ -27,7 +31,7 @@ async function main(params){
         'Content-Type': 'application/json',
         'Authorization': "Basic "+ base64.encode(username + ":" + password) 
       },
-      body: JSON.stringify({meetingId,integrants:[email],date:now,active:true,expiresAt:tomorrow})
+      body: JSON.stringify({meetingId,level,integrants:[email],date:now,active:true,expiresAt:tomorrow})
     });
     const resolve = await promise.json();
     return { meetingId, createdBy: email, createdAt:now};

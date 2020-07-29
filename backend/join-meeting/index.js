@@ -46,11 +46,12 @@ async function main(params){
   const token = params.__ow_headers.authorization;
   var auth = jwt_decode(token);
   let { email } = auth;
-  let { meetingId } = params
+  let { meetingId } = params;
   try{
     const selector = { selector : { "meetingId": meetingId ,"active":true},"fields": [
       "_id",
       "_rev",
+      "level",
       "integrants",
       "date",
       "active",
