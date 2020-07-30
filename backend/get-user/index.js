@@ -1,12 +1,10 @@
 const fetch = require('node-fetch').default;
 const base64 = require('base-64');
 const jwt_decode = require('jwt-decode');
-const username = process.env["CLOUDANT_USER_NAME"];
-const password = process.env["CLOUDANT_PASSWORD"];
-const publicAPI = process.env["PUBLIC_API"];
 
 async function main(params){
   const token = params.__ow_headers.authorization;
+  const { CLOUDANT_USER_NAME:username, CLOUDANT_PASSWORD:password , PUBLIC_API:publicAPI} = params;
   var auth = jwt_decode(token);
   let { email } = auth;
   if(params.email){

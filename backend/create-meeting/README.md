@@ -17,8 +17,9 @@ Example:
 
 ```json
 {
-  "createdAt": "2020-07-28T20:03:37.634Z",
-  "createdBy": "adrianchavez065@gmail.com",
-  "meetingId": "583085"
+  "createdAt": "2020-07-30T00:26:36.396Z",
+  "createdBy": "adrian chavez",
+  "email": "adrianchavez065@gmail.com",
+  "meetingId": "238447"
 }
 ```

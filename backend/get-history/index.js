@@ -1,22 +1,21 @@
 const fetch = require('node-fetch').default;
 const base64 = require('base-64');
 const jwt_decode = require('jwt-decode');
-const username = process.env["CLOUDANT_USER_NAME"];
-const password = process.env["CLOUDANT_PASSWORD"];
-const publicAPI = process.env["PUBLIC_API"];
 
 async function main(params){
   const token = params.__ow_headers.authorization;
   var auth = jwt_decode(token);
   let { email } = auth;
   let { limit } = params;
+  const { CLOUDANT_USER_NAME:username, CLOUDANT_PASSWORD:password , PUBLIC_API:publicAPI} = params;
   if(!limit){
     limit = 5;
   }
   try{  
-    const selector = { selector : { "integrants": { "$in": [email ]},"date": {"$ne": null } },"fields": [
+    const selector = { selector : { "integrants": { "$in": [email ]},"createdAt": {"$ne": null } },"fields": [
       "level",
-      "date",
+      "createdAt",
+      "createdBy",
       "meetingId",
       "integrants"
     ]};
@@ -37,12 +36,12 @@ async function main(params){
     if(docs){
       const meetings = docs.map( doc => {
         const updDoc = {...doc};
-        updDoc.date = new Date(updDoc.date);
+        updDoc.createdAt = new Date(updDoc.createdAt);
         updDoc.totalMembers = updDoc.integrants.length;
-        const { meetingId,level,date,totalMembers} = updDoc
-        return { meetingId, level, date, totalMembers };
+        const { meetingId, level, createdAt, totalMembers, createdBy} = updDoc;
+        return { meetingId, level, totalMembers, createdAt, createdBy };
       }).sort(function(a, b) {
-        return b.date - a.date;
+        return b.createdAt - a.createdAt;
       }).filter( (d,i) => i < limit);
       return { meetings };
     }

@@ -1,9 +1,9 @@
 const fetch = require('node-fetch').default;
 const base64 = require('base-64');
 const jwt_decode = require('jwt-decode');
-const username = process.env["CLOUDANT_USER_NAME"];
-const password = process.env["CLOUDANT_PASSWORD"];
-const publicAPI = process.env["PUBLIC_API"];
+let username = null;
+let password = null;
+let publicAPI = null;
 
 function isMeetingActive(doc){
   if(!doc.active){
@@ -44,20 +44,14 @@ async function joinMeeting(doc,email){
 
 async function main(params){
   const token = params.__ow_headers.authorization;
+  username =  params.CLOUDANT_USER_NAME;
+  password = params.CLOUDANT_PASSWORD;
+  publicAPI = params.PUBLIC_API;
   var auth = jwt_decode(token);
   let { email } = auth;
   let { meetingId } = params;
   try{
-    const selector = { selector : { "meetingId": meetingId ,"active":true},"fields": [
-      "_id",
-      "_rev",
-      "level",
-      "integrants",
-      "date",
-      "active",
-      "expiresAt",
-      "meetingId"
-    ]};
+    const selector = { selector : { "meetingId": meetingId ,"active":true}};
    const promise = await fetch(`${publicAPI}/_find`,
     {
       method:'POST',
@@ -72,13 +66,16 @@ async function main(params){
     if(!docs ){
       return {error: { statusCode: 404 } };
     }
-
+    let createdAt = "";
+    let createdBy = "";
     if(docs){
       await docs.forEach( async doc => {
         if(!isMeetingActive) return {error: { statusCold: 409}};
+        createdAt = doc.createdAt;
+        createdBy = doc.createdBy;
         const updated = await joinMeeting(doc, email );
       });
-      return { meetingId, joined : true};
+      return { meetingId, joined : true, createdAt, createdBy };
     }
   }catch(err){
     return { error: JSON.stringify(err.message)};
