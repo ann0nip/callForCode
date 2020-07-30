@@ -22,7 +22,7 @@ function Home() {
       const res = await createMeeting();
       const meet = await res.json();
       setSpinnerStatus(false);
-      setMeetList([...meetList, meet]);
+      setMeetList([meet, ...meetList]);
     } catch (error) {
       console.log(error);
     }
