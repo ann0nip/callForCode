@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.js",
-    "deploy": "npm run build && ibmcloud wsk action update joinMeeting dist/bundle.js --kind nodejs:10"
+    "deploy": "source ../local.env && npm run build && ibmcloud wsk action update joinMeeting dist/bundle.js --param CLOUDANT_USER_NAME $CLOUDANT_USER_NAME --param CLOUDANT_PASSWORD $CLOUDANT_PASSWORD --param PUBLIC_API $PUBLIC_API --kind nodejs:10"
   },
   "keywords": [],
   "author": "",

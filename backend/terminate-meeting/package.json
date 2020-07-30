@@ -1,0 +1,22 @@
+{
+  "name": "terminate-meeting",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.js",
+    "deploy": "npm run build && ibmcloud fn action update terminateMeeting dist/bundle.js --kind nodejs:10"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "base-64": "^0.1.0",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "webpack": "^4.44.0",
+    "webpack-cli": "^3.3.12"
+  }
+}
