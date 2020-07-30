@@ -9,3 +9,7 @@ export const setAuth = (token) => {
   localStorage.setItem("tokenId", token);
   // localStorage.setItem("username", user);
 };
+
+export const getToken = () => {
+  return localStorage.getItem("tokenId");
+};
