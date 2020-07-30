@@ -23,3 +23,17 @@ export const getHistory = () => {
     },
   });
 };
+
+export const joinMeet = (meetingId) => {
+  const token = getToken();
+  return fetch(`${BASE_URL}/joinMeeting`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      meetingId: meetingId,
+    }),
+  });
+};

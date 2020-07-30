@@ -6,11 +6,13 @@ import { createMeeting, getHistory } from "../api/api";
 import { GlobalContext } from "../context/global-context";
 import Layout from "./commons/LayoutComponent";
 import HistoryList from "./HistoryList";
+import { JoinMeetModal } from "./JoinMeet";
 
 const { Title } = Typography;
 function Home() {
   const { setSpinnerStatus } = useContext(GlobalContext);
   const [meetList, setMeetList] = useState([]);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     getFullHistory();
@@ -39,6 +41,11 @@ function Home() {
       console.log(error);
     }
   }
+
+  function triggerJoinMeetModal(value) {
+    setVisible(value);
+  }
+
   return (
     <Layout>
       <Row className={styles.rowHeader}>
@@ -54,10 +61,16 @@ function Home() {
           <Button shape="round" type="primary" size="large" disabled>
             Escanear QR
           </Button>
-          <Button shape="round" type="primary" size="large">
+          <Button
+            onClick={() => triggerJoinMeetModal(true)}
+            shape="round"
+            type="primary"
+            size="large"
+          >
             Ingresar ID
           </Button>
         </Col>
+        <JoinMeetModal visible={visible} triggerModal={triggerJoinMeetModal} />
       </Row>
 
       <Row className={styles.rowHistory}>
