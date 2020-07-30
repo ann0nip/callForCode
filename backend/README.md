@@ -13,3 +13,4 @@ The code is dividen in several folders, the backend is using _IBM Cloud function
 | /getHistory    | GET    |
 | /createUser    | POST   |
 | /getUser       | GET    |
+| /sendAlert     | POST   |
