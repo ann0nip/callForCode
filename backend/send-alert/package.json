@@ -1,0 +1,23 @@
+{
+  "name": "send-alert",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.js",
+    "deploy": "source ../local.env && npm run build && ibmcloud wsk action update sendAlert dist/bundle.js --param CLOUDANT_USER_NAME $CLOUDANT_USER_NAME --param CLOUDANT_PASSWORD $CLOUDANT_PASSWORD --param PUBLIC_API $PUBLIC_API --param PUBLIC_PUSH_API $PUBLIC_PUSH_API --param APP_SECRET $APP_SECRET --kind nodejs:10"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "base-64": "^0.1.0",
+    "jwt-decode": "^2.2.0",
+    "node-fetch": "^2.6.0"
+  }
+}

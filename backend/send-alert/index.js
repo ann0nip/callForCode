@@ -4,6 +4,8 @@ const jwt_decode = require('jwt-decode');
 let username = null;
 let password = null;
 let publicAPI = null;
+let publicPushNotificationAPI = null;
+let appSecret = null;
 
 async function isRegistered(email){
   try{  
@@ -19,7 +21,7 @@ async function isRegistered(email){
     });
     const resolve = await promise.json();
     if(resolve && resolve.docs.length === 1){
-      return true;
+      return resolve.docs[0];
     }
     return false;
   }catch(err){
@@ -34,54 +36,67 @@ async function main(params){
   username =  params.CLOUDANT_USER_NAME;
   password = params.CLOUDANT_PASSWORD;
   publicAPI = params.PUBLIC_API;
+  publicPushNotificationAPI = params.PUBLIC_PUSH_API;
+  appSecret=params.APP_SECRET;
   if(params && params.email){
     email = params.email;
   }
-  const registered = await isRegistered(email);
-  if(registered){
-    return { created : { statusCode: 302 }};
-  }
-  let city = null, state = null, country = null;
-  if(params && params.city){
-    city = params.city;
-  }
-  if(params && params.state){
-    state = params.state;
-  }
-  if(params && params.country){
-  country = params.country;
+  const user = await isRegistered(email);
+  if(!user){
+    return { sendAlert : { statusCode: 404 } };
   }
   const healthLevels = [ "GOOD", "STABLE", "BAD" ];
   let health = "GOOD";
   if(params && params.health &&  healthLevels.includes(params.health)){
     health = params.health;
   }
-  let covid19 = false;
-  if(params && params.covid19){
-    covid19 = params.covid19;
+  if(!params || !params.covid19){
+    return { sendAlert : { statusCode: 400 }};
   }
-  let symptoms = [];
-  if(params && params.symptoms){
-    symptoms = [ ...params.symptoms ];
+  
+  if(!params || !params.symptoms){
+    return { sendAlert : { statusCode: 400 }};
   }
-  let testedPositive = [];
-  if(params && params.testedPositive){
-    testedPositive = [ ...params.testedPositive ];
+  
+  if(!params || !params.testedPositive){
+    return { sendAlert : { statusCode: 400 }};
   }
+  const userUpd = { ...user };
+  userUpd.covid19 = params.covid19;
+  userUpd.symptoms = [ ...params.symptoms ];
+  userUpd.testedPositive = [ ...params.testedPositive ];
   try{
     const now = new Date().toISOString();
-    const promise = await fetch(`${publicAPI}/`,
+    const promise = await fetch(`${publicAPI}/${userUpd._id}`,
     {
-      method:'POST',
+      method:'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': "Basic "+ base64.encode(username + ":" + password) 
       },
-      body: JSON.stringify({ city, state, country, health, covid19, symptoms, testedPositive,
-      email, createdAt: now, type : "user"})
+      body: JSON.stringify(userUpd)
     });
     const resolve = await promise.json();
-    return { created : { statusCode: 201 }};
+
+    const message = {
+      "message": {
+        "alert": params.message || "Alert",
+        "url": params.url || "https://gracious-boyd-76a065.netlify.app/"
+      }
+    };
+    const promiseNotify = await fetch(`${publicPushNotificationAPI}`,
+    {
+      method:'POST',
+      headers: { 
+        'clientSecret': appSecret,
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Accept-Language':'en-US'
+      },
+      body: JSON.stringify(message)
+    });
+    const resolveNotifycation = await promiseNotify.json();
+    return { created : { statusCode: 204 }};
   }catch(err){
     return { error: JSON.stringify(err.message)};
   }
