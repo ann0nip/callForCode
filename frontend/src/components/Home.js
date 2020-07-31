@@ -13,10 +13,13 @@ const { Title } = Typography;
 function Home() {
   const { setSpinnerStatus } = useContext(GlobalContext);
   const [meetList, setMeetList] = useState([]);
+  const [userName, setUserName] = useState("");
   const [joinModalVisible, setJoinModalVisible] = useState(false);
   const [sendAlertModalVisible, setSendAlertModalVisible] = useState(false);
 
   useEffect(() => {
+    const username = localStorage.getItem("username");
+    setUserName(username);
     getFullHistory();
   }, []);
 
@@ -55,7 +58,7 @@ function Home() {
     <Layout>
       <Row className={styles.rowHeader}>
         <Col span={24} className={styles.rowHeader_username}>
-          <Title level={3}>Nombre de usuario</Title>
+          <Title level={3}>{userName}</Title>
         </Col>
         <Col span={24} className={styles.rowHeader_btns}>
           <Button onClick={createMeet} type="primary" size="large">

@@ -40,10 +40,7 @@ export default function Login(props) {
   const loginAction = async () => {
     try {
       const tokens = await appID.signin();
-      console.log(tokens);
-      // idTokenPayload.email
-      // TODO: Set the username in a localstorage
-      setAuth(tokens.idToken);
+      setAuth(tokens.idToken, tokens.idTokenPayload.name);
       props.history.push("/home");
     } catch (e) {
       openNotification("Error", e.message);

@@ -5,9 +5,9 @@ export const checkAuth = () => {
   return token;
 };
 
-export const setAuth = (token) => {
+export const setAuth = (token, username) => {
   localStorage.setItem("tokenId", token);
-  // localStorage.setItem("username", user);
+  localStorage.setItem("username", username);
 };
 
 export const getToken = () => {
