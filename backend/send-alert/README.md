@@ -14,6 +14,7 @@ Body:
 
 ```json
 {
+  "message": "Be careful someone that met one of your meetings got sick",
   "email": "hola@mx1.ibm.com",
   "covid19": true,
   "health": "STABLE",

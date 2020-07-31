@@ -4,6 +4,8 @@ const jwt_decode = require('jwt-decode');
 let username = null;
 let password = null;
 let publicAPI = null;
+let publicPushNotificationAPI = null;
+let appSecret = null;
 
 async function isRegistered(email){
   try{  
@@ -34,6 +36,8 @@ async function main(params){
   username =  params.CLOUDANT_USER_NAME;
   password = params.CLOUDANT_PASSWORD;
   publicAPI = params.PUBLIC_API;
+  publicPushNotificationAPI = params.PUBLIC_PUSH_API;
+  appSecret=params.APP_SECRET;
   if(params && params.email){
     email = params.email;
   }
@@ -73,6 +77,25 @@ async function main(params){
       body: JSON.stringify(userUpd)
     });
     const resolve = await promise.json();
+
+    const message = {
+      "message": {
+        "alert": params.message || "Alert",
+        "url": params.url || "https://gracious-boyd-76a065.netlify.app/"
+      }
+    };
+    const promiseNotify = await fetch(`${publicPushNotificationAPI}`,
+    {
+      method:'POST',
+      headers: { 
+        'clientSecret': appSecret,
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Accept-Language':'en-US'
+      },
+      body: JSON.stringify(message)
+    });
+    const resolveNotifycation = await promiseNotify.json();
     return { created : { statusCode: 204 }};
   }catch(err){
     return { error: JSON.stringify(err.message)};
