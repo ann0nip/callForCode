@@ -2,7 +2,7 @@ import React, { createContext, useReducer } from "react";
 import AppReducer from "./app-reducer";
 
 const initialState = {
-  user: {},
+  user: "",
   isLoading: false,
 };
 

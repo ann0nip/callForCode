@@ -19,9 +19,11 @@ export default function HistoryList(params) {
                 Meet ID: <strong>{meet.meetingId}</strong>
               </span>
             }
-            description={`Creado por: ${meet.createdBy} on ${moment(
+            description={`Creado por: ${meet.createdBy} · ${moment(
               meet.createdAt
-            ).format("llll")}`}
+            ).format("llll")}
+              · Cantidad de personas: ${meet.totalMembers}
+            `}
           />
         </List.Item>
       )}

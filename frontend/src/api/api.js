@@ -49,3 +49,14 @@ export const sendAlert = (data) => {
     body: JSON.stringify(data),
   });
 };
+
+export const getUser = () => {
+  const token = getToken();
+  return fetch(`${BASE_URL}/getUser`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
