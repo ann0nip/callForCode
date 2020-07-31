@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Modal, Checkbox, Input } from "antd";
+import { Modal, Checkbox, Input, Typography } from "antd";
 import { sendAlert } from "../api/api";
 
+const { Text } = Typography;
 export function SendAlertModal({ visible, triggerModal }) {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [covid, setCovid] = useState();
@@ -37,18 +38,27 @@ export function SendAlertModal({ visible, triggerModal }) {
 
   return (
     <Modal
-      title="Desea unirse a una Meet?"
+      title="Notificar test positivo en Covid-19"
       visible={visible}
       onOk={handleOk}
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
     >
-      <Checkbox onChange={onChangeCheckBox}>Soy positivo en COVID-19</Checkbox>
+      <Checkbox style={{ marginBottom: 15 }} onChange={onChangeCheckBox}>
+        Soy positivo en COVID-19
+      </Checkbox>
 
       <Input
         onChange={onChange}
         placeholder="Describe como te encuentras brevemente"
+        style={{ marginBottom: 15 }}
       />
+
+      <Text disabled>
+        * Al confirmar Covid-19 positivo. Las personas que estuvieron en
+        contacto con Ud dentro de los 14 días anteriores serán notificados pero
+        NO se revelará su identidad.
+      </Text>
     </Modal>
   );
 }

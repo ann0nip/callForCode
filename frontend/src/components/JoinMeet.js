@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Modal, InputNumber } from "antd";
+import { Modal, InputNumber, Typography } from "antd";
 import { joinMeet } from "../api/api";
 
+const { Text } = Typography;
 export function JoinMeetModal({ visible, triggerModal }) {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [meetingId, setMeetingId] = useState();
@@ -29,6 +30,10 @@ export function JoinMeetModal({ visible, triggerModal }) {
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
     >
+      <Text style={{ marginRight: 10 }} type="secondary">
+        Meet ID
+      </Text>
+
       <InputNumber onChange={onChange} />
     </Modal>
   );

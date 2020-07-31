@@ -1,7 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import styles from "./home.module.css";
 import { Row, Col, Typography, Button } from "antd";
-import { WarningOutlined, ReloadOutlined } from "@ant-design/icons";
+import {
+  WarningOutlined,
+  ReloadOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 import { createMeeting, getHistory } from "../api/api";
 import { GlobalContext } from "../context/global-context";
 import Layout from "./commons/LayoutComponent";
@@ -10,7 +14,7 @@ import { JoinMeetModal } from "./JoinMeet";
 import { SendAlertModal } from "./SendAlert";
 
 const { Title } = Typography;
-function Home() {
+function Home(props) {
   const { setSpinnerStatus } = useContext(GlobalContext);
   const [meetList, setMeetList] = useState([]);
   const [userName, setUserName] = useState("");
@@ -22,6 +26,10 @@ function Home() {
     setUserName(username);
     getFullHistory();
   }, []);
+
+  function logout() {
+    props.history.push("/logout");
+  }
 
   async function createMeet() {
     setSpinnerStatus(true);
@@ -50,6 +58,7 @@ function Home() {
   function triggerJoinMeetModal(value) {
     setJoinModalVisible(value);
   }
+
   function triggerSendAlertModal(value) {
     setSendAlertModalVisible(value);
   }
@@ -59,6 +68,7 @@ function Home() {
       <Row className={styles.rowHeader}>
         <Col span={24} className={styles.rowHeader_username}>
           <Title level={3}>{userName}</Title>
+          <LogoutOutlined onClick={logout} className={styles.logout} />
         </Col>
         <Col span={24} className={styles.rowHeader_btns}>
           <Button onClick={createMeet} type="primary" size="large">

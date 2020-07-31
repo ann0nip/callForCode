@@ -53,13 +53,16 @@ export default function Login(props) {
         <img src={girl} width="100%" alt="GirlBG"></img>
         <Card className={styles.card} bodyStyle={cardBodyStyles}>
           <Text strong style={{ color: "#F52200" }}>
-            Be safe around the ones you love
+            Be safe around the ones you love.
           </Text>
-          <Title style={{ fontSize: "2em", margin: 0 }}>TrackVid</Title>
+          <Title style={{ fontSize: "2em", margin: 0 }}>CoTR</Title>
           <Paragraph>
-            Con tu registro tendrás acceso a tu código QR que será tu
-            identificación para tener acceso a lugares públicos y tener mayor
-            tranquilidad al reunirte con grupos de personas.
+            Con tu registro podrás crear IDs de reuniones (meets) que serán tu
+            identificación para que las personas que se van a reunir contigo
+            sean agregados como participantes. En caso de que alguien resulte
+            positivo Covid-19 y notifique a través de CoTR, las personas que
+            estuvieron en contacto con él dentro de los 14 días anteriores serán
+            notificadas.
           </Paragraph>
           <Button
             type="danger"

@@ -7,6 +7,7 @@ import Home from "./components/Home";
 
 const Logout = () => {
   localStorage.removeItem("tokenId");
+  localStorage.removeItem("username");
   return <Redirect to="/" />;
 };
 

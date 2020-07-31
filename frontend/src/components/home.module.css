@@ -41,3 +41,11 @@
   justify-content: center;
   align-items: center;
 }
+
+.logout {
+  font-size: 25px;
+  margin-bottom: 7px;
+  right: 15px;
+  position: absolute;
+  color: #ff4d4f;
+}
