@@ -7,12 +7,14 @@ import { GlobalContext } from "../context/global-context";
 import Layout from "./commons/LayoutComponent";
 import HistoryList from "./HistoryList";
 import { JoinMeetModal } from "./JoinMeet";
+import { SendAlertModal } from "./SendAlert";
 
 const { Title } = Typography;
 function Home() {
   const { setSpinnerStatus } = useContext(GlobalContext);
   const [meetList, setMeetList] = useState([]);
-  const [visible, setVisible] = useState(false);
+  const [joinModalVisible, setJoinModalVisible] = useState(false);
+  const [sendAlertModalVisible, setSendAlertModalVisible] = useState(false);
 
   useEffect(() => {
     getFullHistory();
@@ -43,7 +45,10 @@ function Home() {
   }
 
   function triggerJoinMeetModal(value) {
-    setVisible(value);
+    setJoinModalVisible(value);
+  }
+  function triggerSendAlertModal(value) {
+    setSendAlertModalVisible(value);
   }
 
   return (
@@ -70,7 +75,14 @@ function Home() {
             Ingresar ID
           </Button>
         </Col>
-        <JoinMeetModal visible={visible} triggerModal={triggerJoinMeetModal} />
+        <JoinMeetModal
+          visible={joinModalVisible}
+          triggerModal={triggerJoinMeetModal}
+        />
+        <SendAlertModal
+          visible={sendAlertModalVisible}
+          triggerModal={triggerSendAlertModal}
+        />
       </Row>
 
       <Row className={styles.rowHistory}>
@@ -86,6 +98,7 @@ function Home() {
         </Col>
         <Col span={24} className={styles.rowHistory_alertBtn}>
           <Button
+            onClick={() => triggerSendAlertModal(true)}
             type="danger"
             shape="round"
             size="large"
