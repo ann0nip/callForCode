@@ -37,3 +37,15 @@ export const joinMeet = (meetingId) => {
     }),
   });
 };
+
+export const sendAlert = (data) => {
+  const token = getToken();
+  return fetch(`${BASE_URL}/sendAlert`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
