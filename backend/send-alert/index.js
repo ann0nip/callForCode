@@ -7,6 +7,45 @@ let publicAPI = null;
 let publicPushNotificationAPI = null;
 let appSecret = null;
 
+async function getPeopleToNotify(email){
+  try{  
+    const selector = { selector : { "integrants": { "$in": [email ]},},"fields": [
+      "integrants","createdAt"
+    ]};
+   const promise = await fetch(`${publicAPI}/_find`,
+    {
+      method:'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': "Basic " + base64.encode(username + ":" + password) 
+      },
+      body: JSON.stringify(selector)
+    });
+    const resolve = await promise.json();
+    const { docs }  = resolve;
+    if(!docs ){
+      return {error: { statusCode: 404 } };
+    }
+    if(docs){
+      let people = new Set();
+      let twoWeeksAgo = new Date();
+      twoWeeksAgo.setDate(new Date().getDate() - 14);
+      const meetings = docs.map( doc => {
+        const { integrants, createdAt} = doc;
+        return { integrants, createdAt};
+      }).filter( (d) => new Date(d.createdAt) > twoWeeksAgo)
+      .map( d => {
+        d.integrants.forEach(integrant => people.add(integrant))
+        return d;
+      })
+      return { people :[...people] };
+    }
+    return {error: { statusCode: 404 } };
+  }catch(err){
+    return { error: JSON.stringify(err.message)};
+  }
+}
+
 async function isRegistered(email){
   try{  
     const selector = { selector :  { "email" : email } };
@@ -32,7 +71,6 @@ async function main(params){
   const token = params.__ow_headers.authorization;
   var auth = jwt_decode(token);
   let { email } = auth;
-
   username =  params.CLOUDANT_USER_NAME;
   password = params.CLOUDANT_PASSWORD;
   publicAPI = params.PUBLIC_API;
@@ -77,13 +115,15 @@ async function main(params){
       body: JSON.stringify(userUpd)
     });
     const resolve = await promise.json();
-
     const message = {
       "message": {
         "alert": params.message || "Alert",
         "url": params.url || "https://gracious-boyd-76a065.netlify.app/"
       }
     };
+    console.log("a");
+    const people = await getPeopleToNotify(email);
+    console.log(people);
     const promiseNotify = await fetch(`${publicPushNotificationAPI}`,
     {
       method:'POST',
@@ -101,4 +141,5 @@ async function main(params){
     return { error: JSON.stringify(err.message)};
   }
 }
+
 global.main = main;
