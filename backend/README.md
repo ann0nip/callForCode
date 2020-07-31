@@ -14,3 +14,4 @@ The code is dividen in several folders, the backend is using _IBM Cloud function
 | /createUser    | POST   |
 | /getUser       | GET    |
 | /sendAlert     | POST   |
+| /generateQR    | GET    |
