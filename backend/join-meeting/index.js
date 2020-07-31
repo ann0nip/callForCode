@@ -18,12 +18,10 @@ function isMeetingActive(doc){
 
 async function joinMeeting(doc,email){
   const{_id,integrants} = doc;
-  let newIntegrants = null;
-  if(! integrants.find(integrant => integrant === email)){
-    newIntegrants = [...integrants,email];
-  } else {
-    newIntegrants = [...integrants];
-  }
+  let newIntegrants = [...integrants];
+  if(! integrants.find(integrant => integrant == email)){
+    newIntegrants.push(email);
+  } 
   try{
     const newDoc = {...doc,integrants:newIntegrants};
     const promise = await fetch(`${publicAPI}/${_id}`,
@@ -36,9 +34,9 @@ async function joinMeeting(doc,email){
       body: JSON.stringify(newDoc)
     });
     resolve = await promise.json();
-    return resolve;
+    return true;
   } catch (err){
-    return  { error: err.message};
+    return  err.message;
   }
 }
 
@@ -47,11 +45,12 @@ async function main(params){
   username =  params.CLOUDANT_USER_NAME;
   password = params.CLOUDANT_PASSWORD;
   publicAPI = params.PUBLIC_API;
-  var auth = jwt_decode(token);
+
+ var auth = jwt_decode(token);
   let { email } = auth;
   let { meetingId } = params;
   try{
-    const selector = { selector : { "meetingId": meetingId ,"active":true}};
+    const selector = { selector : { "meetingId": meetingId.toString()}};
    const promise = await fetch(`${publicAPI}/_find`,
     {
       method:'POST',
@@ -62,6 +61,7 @@ async function main(params){
       body: JSON.stringify(selector)
     });
     const resolve = await promise.json();
+    
     const { docs }  = resolve;
     if(!docs ){
       return {error: { statusCode: 404 } };
@@ -69,18 +69,15 @@ async function main(params){
     let createdAt = "";
     let createdBy = "";
     if(docs){
-      await docs.forEach( async doc => {
-        if(!isMeetingActive) return {error: { statusCold: 409}};
-        createdAt = doc.createdAt;
-        createdBy = doc.createdBy;
-        const updated = await joinMeeting(doc, email );
-      });
+      const doc = docs[0];
+      if(!isMeetingActive) return {error: { statusCode: 409}};
+      createdAt = doc.createdAt;
+      createdBy = doc.createdBy;
+      const updated = await joinMeeting(doc, email );
       return { meetingId, joined : true, createdAt, createdBy };
     }
   }catch(err){
     return { error: JSON.stringify(err.message)};
   }
 }
-
-main();
-global.main = main
+global.main = main;
